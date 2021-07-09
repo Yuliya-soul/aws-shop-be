@@ -56,7 +56,7 @@ provider:
 
 functions:
   getProductsList:
-    handler: getProductsList.products
+    handler: src/handlers/getProductsList.products
     events:
       - http:
           path: /products
@@ -65,7 +65,7 @@ functions:
           path: /{proxy+}
           method: get
   getProductById:
-    handler: getProductsById.productById
+    handler: src/handlers/getProductsById.productById
     events:
       - http:
           path: products/{productById}

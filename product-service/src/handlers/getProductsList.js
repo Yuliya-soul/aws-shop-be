@@ -1,12 +1,9 @@
 const serverless = require("serverless-http");
 const express = require("express");
 const app = express();
+const bookRouter = require('../books/books.router');
 
-app.get("/products", (req, res, next) => {
-  return res.status(200).json({
-    message: "Hello there here are your products^)))",
-  });
-});
+app.get("/products", bookRouter);
 
 
 app.use((req, res, next) => {
