@@ -1,5 +1,4 @@
 const uuid = require('uuid');
-
 class Book {
   constructor({
     id = uuid(),

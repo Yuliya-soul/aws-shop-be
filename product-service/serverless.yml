@@ -61,9 +61,11 @@ functions:
       - http:
           path: /products
           method: get
+          cors: true
       - http:
           path: /{proxy+}
           method: get
+          cors: true
   getProductById:
     handler: src/handlers/getProductsById.productById
     events:
