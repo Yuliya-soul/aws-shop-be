@@ -3,7 +3,9 @@
     "version": "1.0.0",
     "description": "",
     "dependencies": {
+        "cors": "^2.8.5",
         "express": "^4.17.1",
+        "middy": "^0.36.0",
         "serverless-http": "^2.7.0",
         "uuid": "^8.3.2"
     }

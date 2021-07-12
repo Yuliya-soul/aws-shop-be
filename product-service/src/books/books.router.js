@@ -1,6 +1,8 @@
+  
 const router = require('express').Router();
 const data = require('./books');
-
+const middy = require('middy')
+const { cors } = require('middy/middlewares')
 
 router.get(
     '/products',
@@ -9,6 +11,8 @@ router.get(
       res.status(200).send(bookEntity);
     }
   );
- 
 
-  module.exports = router;
+const handler = middy(router)
+.use(cors()) 
+
+  module.exports = handler;
