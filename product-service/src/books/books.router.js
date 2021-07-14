@@ -6,8 +6,8 @@ const { cors } = require('middy/middlewares');
 
  router.get('/products', async (req,res,next) => {
   try{
-     const bookEntity = await res.json(data);
-      res.status(200).send(bookEntity);
+     const bookEntity = await  res.status(200).send(data);
+     return bookEntity
   }
   catch (error) {
       return next(error)

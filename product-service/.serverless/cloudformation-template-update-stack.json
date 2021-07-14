@@ -74,13 +74,13 @@
     "GetProductsListLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/product-service-new-dev-getProductsList"
+        "LogGroupName": "/aws/lambda/product-service-1-dev-getProductsList"
       }
     },
     "GetProductByIdLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/product-service-new-dev-getProductById"
+        "LogGroupName": "/aws/lambda/product-service-1-dev-getProductById"
       }
     },
     "IamRoleLambdaExecution": {
@@ -108,7 +108,7 @@
               "Fn::Join": [
                 "-",
                 [
-                  "product-service-new",
+                  "product-service-1",
                   "dev",
                   "lambda"
                 ]
@@ -125,7 +125,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/product-service-new-dev*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/product-service-1-dev*:*"
                     }
                   ]
                 },
@@ -136,9 +136,44 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/product-service-new-dev*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/product-service-1-dev*:*:*"
                     }
                   ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:ListBucket"
+                  ],
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:s3:::",
+                        {
+                          "Ref": "ServerlessDeploymentBucket"
+                        }
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject"
+                  ],
+                  "Resource": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:aws:s3:::",
+                        {
+                          "Ref": "ServerlessDeploymentBucket"
+                        },
+                        "/*"
+                      ]
+                    ]
+                  }
                 }
               ]
             }
@@ -149,7 +184,7 @@
           "Fn::Join": [
             "-",
             [
-              "product-service-new",
+              "product-service-1",
               "dev",
               {
                 "Ref": "AWS::Region"
@@ -167,11 +202,11 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/product-service-new/dev/1626207212298-2021-07-13T20:13:32.298Z/product-service-new.zip"
+          "S3Key": "serverless/product-service-1/dev/1626278564076-2021-07-14T16:02:44.076Z/product-service-1.zip"
         },
         "Handler": "src/handlers/getProductsList.products",
         "Runtime": "nodejs12.x",
-        "FunctionName": "product-service-new-dev-getProductsList",
+        "FunctionName": "product-service-1-dev-getProductsList",
         "MemorySize": 1024,
         "Timeout": 6,
         "Role": {
@@ -192,11 +227,11 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/product-service-new/dev/1626207212298-2021-07-13T20:13:32.298Z/product-service-new.zip"
+          "S3Key": "serverless/product-service-1/dev/1626278564076-2021-07-14T16:02:44.076Z/product-service-1.zip"
         },
         "Handler": "src/handlers/getProductsById.productById",
         "Runtime": "nodejs12.x",
-        "FunctionName": "product-service-new-dev-getProductById",
+        "FunctionName": "product-service-1-dev-getProductById",
         "MemorySize": 1024,
         "Timeout": 6,
         "Role": {
@@ -210,30 +245,30 @@
         "GetProductByIdLogGroup"
       ]
     },
-    "GetProductsListLambdaVersionOABSXIkpmsrjXjyfELgROxGscu08Xa20CZkg205ILyw": {
+    "GetProductsListLambdaVersionZ6ujtsWzk44kFLZkkGndFB5IJWjkxEW7KHWwaLA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetProductsListLambdaFunction"
         },
-        "CodeSha256": "7Z+963kGV7PmK7n1G/HRrNa16l8e/fFFzZFw1Q/hCEY="
+        "CodeSha256": "gLQ4qW4PCesi71PMsfhwU8CGd7Yudaej8f3CG7iLvb4="
       }
     },
-    "GetProductByIdLambdaVersionrfLQgul9rPRCLoRl2orQHYMjTBo0O3gLNcklXwsrY": {
+    "GetProductByIdLambdaVersionA5eJgn4UnbwvJl4aG8854coOLu7L5VedU4V9zHxn5b8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetProductByIdLambdaFunction"
         },
-        "CodeSha256": "7Z+963kGV7PmK7n1G/HRrNa16l8e/fFFzZFw1Q/hCEY="
+        "CodeSha256": "gLQ4qW4PCesi71PMsfhwU8CGd7Yudaej8f3CG7iLvb4="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "dev-product-service-new",
+        "Name": "dev-product-service-1",
         "EndpointConfiguration": {
           "Types": [
             "EDGE"
@@ -460,7 +495,10 @@
           }
         },
         "MethodResponses": []
-      }
+      },
+      "DependsOn": [
+        "GetProductsListLambdaPermissionApiGateway"
+      ]
     },
     "ApiGatewayMethodProxyVarGet": {
       "Type": "AWS::ApiGateway::Method",
@@ -503,7 +541,10 @@
           }
         },
         "MethodResponses": []
-      }
+      },
+      "DependsOn": [
+        "GetProductsListLambdaPermissionApiGateway"
+      ]
     },
     "ApiGatewayMethodProductsProductbyidVarGet": {
       "Type": "AWS::ApiGateway::Method",
@@ -548,9 +589,12 @@
           }
         },
         "MethodResponses": []
-      }
+      },
+      "DependsOn": [
+        "GetProductByIdLambdaPermissionApiGateway"
+      ]
     },
-    "ApiGatewayDeployment1626207206706": {
+    "ApiGatewayDeployment1626278541406": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -648,25 +692,25 @@
         "Ref": "ServerlessDeploymentBucket"
       },
       "Export": {
-        "Name": "sls-product-service-new-dev-ServerlessDeploymentBucketName"
+        "Name": "sls-product-service-1-dev-ServerlessDeploymentBucketName"
       }
     },
     "GetProductsListLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetProductsListLambdaVersionOABSXIkpmsrjXjyfELgROxGscu08Xa20CZkg205ILyw"
+        "Ref": "GetProductsListLambdaVersionZ6ujtsWzk44kFLZkkGndFB5IJWjkxEW7KHWwaLA"
       },
       "Export": {
-        "Name": "sls-product-service-new-dev-GetProductsListLambdaFunctionQualifiedArn"
+        "Name": "sls-product-service-1-dev-GetProductsListLambdaFunctionQualifiedArn"
       }
     },
     "GetProductByIdLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetProductByIdLambdaVersionrfLQgul9rPRCLoRl2orQHYMjTBo0O3gLNcklXwsrY"
+        "Ref": "GetProductByIdLambdaVersionA5eJgn4UnbwvJl4aG8854coOLu7L5VedU4V9zHxn5b8"
       },
       "Export": {
-        "Name": "sls-product-service-new-dev-GetProductByIdLambdaFunctionQualifiedArn"
+        "Name": "sls-product-service-1-dev-GetProductByIdLambdaFunctionQualifiedArn"
       }
     },
     "ServiceEndpoint": {
@@ -692,7 +736,7 @@
         ]
       },
       "Export": {
-        "Name": "sls-product-service-new-dev-ServiceEndpoint"
+        "Name": "sls-product-service-1-dev-ServiceEndpoint"
       }
     }
   }
