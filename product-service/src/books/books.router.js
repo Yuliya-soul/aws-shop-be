@@ -4,6 +4,7 @@ const data = require('./books');
 const middy = require('middy')
 const { cors } = require('middy/middlewares');
 
+
  router.get('/products', async (req,res,next) => {
   try{
      const bookEntity = await  res.status(200).send(data);

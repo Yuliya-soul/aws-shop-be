@@ -9,9 +9,12 @@ router.get( '/products/:productById', async (req, res,next) => {
     const book = data.filter((val)=>{
       return val.id === req.params.productById;
     });
-    const bookEntity = await res.status(200).send(book);
-    return bookEntity
-  }
+
+if(book[0]!==undefined) return await res.status(200).send(book);
+else return  res.status(404).json({
+  error: "Book not Found 404",
+});
+   }
   catch (error) {
     return next(error)
   }
