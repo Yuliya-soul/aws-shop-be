@@ -46,7 +46,7 @@ provider:
                 - Ref: ServerlessDeploymentBucket
                 - '/*'
 plugins:
-
+  - serverless-webpack
   - serverless-offline
 
    

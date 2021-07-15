@@ -4,9 +4,9 @@
     "description": "",
     "scripts": {
         "test": "sls offline start",
-        "dep":"sls deploy"
-    
-      },
+        "dep": "sls deploy",
+        "package-build": "sls package"
+    },
     "dependencies": {
         "cors": "^2.8.5",
         "express": "^4.17.1",
@@ -14,11 +14,11 @@
         "node-fetch": "^2.6.1",
         "serverless-http": "^2.7.0",
         "swagger-ui-express": "^4.1.6",
-        "uuid": "^8.3.2",
         "yamljs": "^0.3.0"
     },
     "devDependencies": {
         "serverless-offline": "^7.0.0",
-        "serverless-webpack": "^5.5.1"
+        "serverless-webpack": "^5.5.1",
+        "webpack": "^5.44.0"
     }
 }
