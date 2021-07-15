@@ -6,15 +6,14 @@
         "test": "sls offline start",
         "dep": "sls deploy",
         "package-build": "sls package"
+      
     },
     "dependencies": {
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "middy": "^0.36.0",
         "node-fetch": "^2.6.1",
-        "serverless-http": "^2.7.0",
-        "swagger-ui-express": "^4.1.6",
-        "yamljs": "^0.3.0"
+        "serverless-http": "^2.7.0"
     },
     "devDependencies": {
         "serverless-offline": "^7.0.0",

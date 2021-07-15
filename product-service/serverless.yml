@@ -19,7 +19,10 @@ service: product-service-1
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 frameworkVersion: '2'
-
+plugins:
+    - serverless-webpack
+    - serverless-offline 
+ 
 provider:
   name: aws
   runtime: nodejs12.x
@@ -45,9 +48,8 @@ provider:
               - - 'arn:aws:s3:::'
                 - Ref: ServerlessDeploymentBucket
                 - '/*'
-plugins:
-  - serverless-webpack
-  - serverless-offline
+
+    
 
    
 # you can define service wide environment variables here
@@ -87,7 +89,9 @@ functions:
             parameters:
               paths:
                 productId: true
-  
+
+          
+
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -141,5 +145,3 @@ functions:
 #       Description: "Description for the output"
 #       Value: "Some output value"
 
-
-  
