@@ -1,0 +1,19 @@
+service: lesson4-2
+app: lesson4-2
+
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+
+# you can define service wide environment variables here
+  environment:
+
+
+functions:
+  createPGDb:
+    handler: pg-client-lambda.invoke
+
