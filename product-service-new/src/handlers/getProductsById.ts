@@ -15,9 +15,7 @@ export const getProductsById: APIGatewayProxyHandler = async (event) => {
 		  ON s.product_id = p.id                              
 		 WHERE p.id = '${id}'  `;
     const response = await client.query(query);
-    console.log("response", response);
     const BookFound = response.rows[0];
-    console.log("book", BookFound);
 
     return await {
       statusCode: 200,

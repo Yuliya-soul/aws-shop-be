@@ -54,6 +54,18 @@ const serverlessConfiguration: AWS = {
         },
       ],
     },
+    postProducts: {
+      handler: "src/handlers/postProducts.postProducts",
+      events: [
+        {
+          http: {
+            method: "get",
+            path: "post/products",
+            cors: true,
+          },
+        },
+      ],
+    },
     /*   createPGDb: {
       handler: "src/handlers/pg-client-lambda.invoke",
     },  */
