@@ -54,7 +54,7 @@ const serverlessConfiguration: AWS = {
         },
       ],
     },
-  /*   createPGDb: {
+    /*   createPGDb: {
       handler: "src/handlers/pg-client-lambda.invoke",
     },  */
   },
