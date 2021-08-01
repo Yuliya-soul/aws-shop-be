@@ -3,11 +3,15 @@ import { APIGatewayProxyHandler } from "aws-lambda";
 const { Client } = require("pg");
 import { dbOptions } from "../options";
 import { product } from "../product";
+import { winstonLogger } from "../utils/winstonLogger";
 
-export const postProducts: APIGatewayProxyHandler = async () => {
+export const postProducts: APIGatewayProxyHandler = async (event) => {
   const client = new Client(dbOptions);
   client.connect();
   try {
+    winstonLogger.logRequest(
+      `Incoming event postProducts lambda: ${JSON.stringify(event)}`
+    );
     await client.query("BEGIN");
     if (
       typeof product.title != "string" ||
@@ -49,11 +53,11 @@ export const postProducts: APIGatewayProxyHandler = async () => {
        `;
     const response = await client.query(querySelectProduct);
     await client.query("COMMIT");
-    const bookPut = response.rows[0];
-
+    const bookToPut = response.rows[0];
+    winstonLogger.logRequest(`Created product: ${JSON.stringify(bookToPut)}`);
     return await {
       statusCode: 200,
-      body: JSON.stringify(bookPut),
+      body: JSON.stringify(bookToPut),
       headers: {
         "Access-Control-Allow-Origin": "*",
       },

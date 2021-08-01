@@ -2,11 +2,15 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 const { Client } = require("pg");
 import { dbOptions } from "../options";
+import { winstonLogger } from "../utils/winstonLogger";
 
 export const getProductsById: APIGatewayProxyHandler = async (event) => {
   const client = new Client(dbOptions);
   client.connect();
   try {
+    winstonLogger.logRequest(
+      `Incoming event getProductsById lambda: ${JSON.stringify(event)}`
+    );
     const { id } = event.pathParameters;
     const query = ` 
 		SELECT p.id, p.title, p.description, p.price, s.count         
@@ -16,6 +20,9 @@ export const getProductsById: APIGatewayProxyHandler = async (event) => {
 		 WHERE p.id = '${id}'  `;
     const response = await client.query(query);
     const BookFound = response.rows[0];
+    winstonLogger.logRequest(
+      `"Received product with id: ${id}: ${JSON.stringify(BookFound)}`
+    );
 
     return await {
       statusCode: 200,
