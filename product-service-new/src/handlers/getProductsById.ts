@@ -24,6 +24,19 @@ export const getProductsById: APIGatewayProxyHandler = async (event) => {
       `"Received product with id: ${id}: ${JSON.stringify(BookFound)}`
     );
 
+    if (!BookFound) {
+      return await {
+        statusCode: 404,
+        body: JSON.stringify({
+          message: `Book not found`,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      };
+    }
+    winstonLogger.logRequest(`Lambda successfully invoked and finished`);
     return await {
       statusCode: 200,
       body: JSON.stringify(BookFound),
@@ -32,13 +45,13 @@ export const getProductsById: APIGatewayProxyHandler = async (event) => {
       },
     };
   } catch (error) {
+    winstonLogger.logError(`Error: ${error.message}`);
     return await {
-      statusCode: 404,
+      statusCode: 500,
       body: JSON.stringify({
-        message: `Book not found`,
+        message: error.message || "Error during database request executing",
       }),
       headers: {
-        "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
     };

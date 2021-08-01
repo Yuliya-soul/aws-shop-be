@@ -16,8 +16,10 @@ export const postProducts: APIGatewayProxyHandler = async (event) => {
     if (
       typeof product.title != "string" ||
       typeof product.years != "string" ||
+      typeof product.author != "string" ||
       typeof product.description != "string" ||
       typeof product.price != "number" ||
+      typeof product.picture != "string" ||
       typeof product.count != "number"
     ) {
       return await {
@@ -55,6 +57,7 @@ export const postProducts: APIGatewayProxyHandler = async (event) => {
     await client.query("COMMIT");
     const bookToPut = response.rows[0];
     winstonLogger.logRequest(`Created product: ${JSON.stringify(bookToPut)}`);
+    winstonLogger.logRequest(`Lambda successfully invoked and finished`);
     return await {
       statusCode: 200,
       body: JSON.stringify(bookToPut),
@@ -64,10 +67,11 @@ export const postProducts: APIGatewayProxyHandler = async (event) => {
     };
   } catch (error) {
     await client.query("ROLLBACK");
+    winstonLogger.logError(`Error: ${error.message}`);
     return await {
-      statusCode: 400,
+      statusCode: 500,
       body: JSON.stringify({
-        message: `Product data is invalid. ${error}`,
+        message: error.message || `Product data is invalid`,
       }),
       headers: {
         "Content-Type": "application/json",

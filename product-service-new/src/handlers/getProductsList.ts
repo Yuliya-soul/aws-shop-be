@@ -18,7 +18,10 @@ export const getProductsList: APIGatewayProxyHandler = async (event) => {
       ON s.product_id = p.id`;
     const response = await client.query(query);
 
-    winstonLogger.logRequest(`"Received products: ${JSON.stringify(response.rows)}`);
+    winstonLogger.logRequest(
+      `"Received products: ${JSON.stringify(response.rows)}`
+    );
+    winstonLogger.logRequest(`Lambda successfully invoked and finished`);
     return await {
       statusCode: 200,
       body: JSON.stringify(response.rows),
@@ -27,7 +30,16 @@ export const getProductsList: APIGatewayProxyHandler = async (event) => {
       },
     };
   } catch (error) {
-    console.error("Error during database request executing:", error);
+    winstonLogger.logError(`Error: ${error.message}`);
+    return await {
+      statusCode: 500,
+      body: JSON.stringify({
+        message: error.message || "Error during database request executing",
+      }),
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
   } finally {
     client.end();
   }

@@ -1,6 +1,8 @@
 endpoints:
-  GET - https://41er0boy96.execute-api.eu-west-1.amazonaws.com/dev/products
-  GET - https://41er0boy96.execute-api.eu-west-1.amazonaws.com/dev/products/{id}
+GET - https://5rqmnmnhw5.execute-api.us-east-1.amazonaws.com/dev/products
+GET - https://5rqmnmnhw5.execute-api.us-east-1.amazonaws.com/dev/products/{id}
+GET - https://5rqmnmnhw5.execute-api.us-east-1.amazonaws.com/dev/post/products
 functions:
-  getProductsList: product-service-new-dev-getProductsList
-  getProductsById: product-service-new-dev-getProductsById
+getProductsList: product-service-new-4-dev-getProductsList
+getProductsById: product-service-new-4-dev-getProductsById
+postProducts: product-service-new-4-dev-postProducts
