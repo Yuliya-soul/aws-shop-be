@@ -1,11 +1,12 @@
-
-export interface IBook {
-  id: string,
-  title: string,
-  year:string,
-  author:string,
-  count: number,
-  description: string,
-  price: number,
-  picture: string
-}
+export default {
+  type: "object",
+  properties: {
+      title: { type: 'string' },
+      description: { type: 'string' },
+      price: { type: 'number' },
+      count: { type: 'number' },
+      year:{type:'string'},
+      author:{type:'string'},
+      picture: {type:'string'},
+  },
+} as const;

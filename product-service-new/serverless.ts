@@ -21,7 +21,7 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
-      PG_HOST: "",
+      PG_HOST: "d",
       PG_PORT: "5432",
       PG_DATABASE: "postgres",
       PG_USERNAME: "postgres",
@@ -59,16 +59,13 @@ const serverlessConfiguration: AWS = {
       events: [
         {
           http: {
-            method: "get",
+            method: "post",
             path: "post/products",
             cors: true,
           },
         },
       ],
     },
-    /*   createPGDb: {
-      handler: "src/handlers/pg-client-lambda.invoke",
-    },  */
   },
 };
 

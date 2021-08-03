@@ -2,41 +2,26 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 const { Client } = require("pg");
 import { dbOptions } from "../options";
-import { product } from "../product";
 import { winstonLogger } from "../utils/winstonLogger";
 
-export const postProducts: APIGatewayProxyHandler = async (event) => {
+export const postProducts: APIGatewayProxyHandler = async (event: any) => {
+  const product = JSON.parse(event.body);
+
   const client = new Client(dbOptions);
   client.connect();
   try {
     winstonLogger.logRequest(
       `Incoming event postProducts lambda: ${JSON.stringify(event)}`
     );
+
     await client.query("BEGIN");
-    if (
-      typeof product.title != "string" ||
-      typeof product.years != "string" ||
-      typeof product.author != "string" ||
-      typeof product.description != "string" ||
-      typeof product.price != "number" ||
-      typeof product.picture != "string" ||
-      typeof product.count != "number"
-    ) {
-      return await {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: `Product data is invalid. `,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      };
-    }
+
     const queryInsertProduct = `
         INSERT INTO products(title,description,price,years,author,picture)
           VALUES
-          ('${product.title}','${product.description}','${product.price}','${product.years}','${product.author}','${product.picture}')
+          ('${product.title}','${product.description}','${Number(
+      product.price
+    )}','${product.years}','${product.author}','${product.picture}')
           RETURNING id`;
     const {
       rows: [{ id }],
