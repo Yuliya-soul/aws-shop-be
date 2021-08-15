@@ -1,0 +1,57 @@
+service: import-service-5-new
+frameworkVersion: "2"
+variablesResolutionMode: 20210219
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  lambdaHashingVersion: 20201221
+custom:
+  webpack:
+    webpackConfig: "webpack.config.js"
+    includeModules: true
+  s3bucketName: import-service-5
+
+environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+    S3_BUCKET_NAME: ${self:custom.s3bucketName}
+
+iam:
+   role:
+    statements:
+      - Effect: "Allow"
+        Action: "s3:*"
+        Resource:
+          - "arn:aws:s3:::${self:custom.s3bucketName}"
+          - "arn:aws:s3:::${self:custom.s3bucketName}/*"
+          - "arn:aws:s3:::${self:custom.s3bucketName}/*/*"
+
+plugins: ["serverless-webpack", "serverless-offline"]
+
+
+
+functions:
+  importProductsFile:
+    handler: handler.importProductsFile
+    events:
+      - http:
+          method: get
+          path: import
+          querystrings:
+            name: true
+          cors:
+            origin: "*"
+         
+
+
+  importFileParser:
+    handler: handler.importFileParser
+    events:
+      - s3:
+          bucket: ${self:custom.s3bucketName}
+          existing: true
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploaded/
+            - suffix: .csv
