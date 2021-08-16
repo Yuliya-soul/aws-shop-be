@@ -1,39 +1,40 @@
 service: import-service-5-new
-frameworkVersion: "2"
+frameworkVersion: '2'
 variablesResolutionMode: 20210219
+
 
 provider:
   name: aws
   runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
   region: us-east-1
   lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:ListBucket'
+      Resource: 'arn:aws:s3:::import-service-5'
+    - Effect: "Allow"
+      Action: 
+         - 's3:PutObject'
+      Resource: "arn:aws:s3:::import-service-5/*" 
+    - Effect: "Allow"
+      Action:
+       - "s3:*"
+      Resource: "arn:aws:s3:::import-service-5/*"
+
+plugins:
+   ["serverless-webpack", "serverless-offline"]
+
 custom:
   webpack:
-    webpackConfig: "webpack.config.js"
+    webpackConfig: 'webpack.config.js'
     includeModules: true
-  s3bucketName: import-service-5
-
-environment:
-    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
-    S3_BUCKET_NAME: ${self:custom.s3bucketName}
-
-iam:
-   role:
-    statements:
-      - Effect: "Allow"
-        Action: "s3:*"
-        Resource:
-          - "arn:aws:s3:::${self:custom.s3bucketName}"
-          - "arn:aws:s3:::${self:custom.s3bucketName}/*"
-          - "arn:aws:s3:::${self:custom.s3bucketName}/*/*"
-
-plugins: ["serverless-webpack", "serverless-offline"]
-
 
 
 functions:
   importProductsFile:
-    handler: handler.importProductsFile
+    handler: importProductsFile.importProductsFile
     events:
       - http:
           method: get
@@ -42,16 +43,16 @@ functions:
             name: true
           cors:
             origin: "*"
-         
-
-
+        
   importFileParser:
-    handler: handler.importFileParser
+    handler: importFileParser.importFileParser
     events:
       - s3:
-          bucket: ${self:custom.s3bucketName}
+          bucket: 'import-service-5'
           existing: true
           event: s3:ObjectCreated:*
           rules:
             - prefix: uploaded/
             - suffix: .csv
+
+      
