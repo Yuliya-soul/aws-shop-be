@@ -4,6 +4,9 @@ const serverlessConfiguration: AWS = {
   service: "product-service-new-4",
   app: "lesson4-new",
   frameworkVersion: "2",
+  useDotenv: true,
+  configValidationMode: "warn",
+
   custom: {
     webpack: {
       webpackConfig: "./webpack.config.js",
@@ -15,20 +18,24 @@ const serverlessConfiguration: AWS = {
     name: "aws",
     runtime: "nodejs14.x",
     region: "us-east-1",
+
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
+
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
-      PG_HOST: "d",
-      PG_PORT: "5432",
-      PG_DATABASE: "postgres",
-      PG_USERNAME: "postgres",
-      PG_PASSWORD: "user0123456789",
+      PG_HOST: process.env.DB_HOST,
+      PG_PORT: process.env.PG_PORT,
+      PG_DATABASE: process.env.PG_DATABASE,
+      PG_USERNAME: process.env.PG_USERNAME,
+      PG_PASSWORD: process.env.PG_PASSWORD,
+
     },
     lambdaHashingVersion: "20201221",
   },
+
   functions: {
     getProductsList: {
       handler: "src/handlers/getProductsList.getProductsList",
@@ -54,6 +61,7 @@ const serverlessConfiguration: AWS = {
         },
       ],
     },
+
     postProducts: {
       handler: "src/handlers/postProducts.postProducts",
       events: [

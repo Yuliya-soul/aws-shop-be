@@ -17,7 +17,8 @@ provider:
   runtime: nodejs12.x
   environment:
     THE_QUEUE_URL: { Ref: catalogItemsQueue }
-    BUCKET:  ${self:custom.bucketName}
+    BUCKET: ${self:custom.bucketName}
+    SNS: { Ref: "SNSTopic" }
 
   stage: ${opt:stage, 'dev'}
   region: us-east-1
@@ -40,31 +41,13 @@ provider:
         - sqs:*
       Resource:
         Fn::GetAtt: [catalogItemsQueue, Arn]
+    - Effect: "Allow"
+      Action: 
+        - sns:*
+      Resource: 
+        Ref: "SNSTopic"
 
-resources:
-  Resources:
-    catalogItemsQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: "catalogItemsQueue"
-  Outputs: 
-    QueueURL: 
-     Description: "URL of new Amazon SQS Queue"
-     Value: 
-       Ref: "catalogItemsQueue"
-    QueueARN: 
-      Description: "ARN of new AmazonSQS Queue"
-      Value: 
-        Fn::GetAtt: 
-          - "catalogItemsQueue"
-          - "Arn"
-    QueueName: 
-      Description: "Name of new Amazon SQS Queue"
-      Value: 
-        Fn::GetAtt: 
-          - "catalogItemsQueue"
-          - "QueueName"
-
+         
 functions:
   importProductsFile:
     handler: importProductsFile.importProductsFile
@@ -72,8 +55,11 @@ functions:
       - http:
           method: get
           path: import
-          querystrings:
-            name: true
+          request:
+            parameters:
+              querystrings:
+                name: true
+          
           cors:
             origin: "*"
 
@@ -88,4 +74,28 @@ functions:
             - prefix: uploaded/
             - suffix: .csv
 
-            
+  catalogBatchProcess: 
+    handler: catalogBatchProcess.catalogBatchProcess
+    events: 
+      - sqs: 
+          batchSize: 5
+          arn:
+            Fn::GetAtt: [catalogItemsQueue, Arn]
+       
+resources:
+  Resources:
+    catalogItemsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: "catalogItemsQueue"
+    SNSTopic: 
+        Type: AWS::SNS::Topic
+        Properties: 
+          TopicName: "createProductTopic"
+    SNSSubscription: 
+        Type: "AWS::SNS::Subscription"
+        Properties: 
+          Endpoint: "darki2015@icloud.com"
+          Protocol: "email"
+          TopicArn: 
+            Ref: "SNSTopic"            
