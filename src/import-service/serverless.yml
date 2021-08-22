@@ -1,36 +1,68 @@
-service: import-service-5-new
-frameworkVersion: '2'
+service: sqs-sns-service
+frameworkVersion: "2"
 variablesResolutionMode: 20210219
+useDotenv: true
+configValidationMode: warn
 
+custom:
+  webpack:
+    webpackConfig: "webpack.config.js"
+    includeModules: true
+  bucketName: import-service-5
+
+plugins: ["serverless-webpack", "serverless-offline"]
 
 provider:
   name: aws
   runtime: nodejs12.x
+  environment:
+    THE_QUEUE_URL: { Ref: catalogItemsQueue }
+
   stage: ${opt:stage, 'dev'}
   region: us-east-1
   lambdaHashingVersion: 20201221
   iamRoleStatements:
-    - Effect: 'Allow'
-      Action:
-        - 's3:ListBucket'
-      Resource: 'arn:aws:s3:::import-service-5'
-    - Effect: "Allow"
-      Action: 
-         - 's3:PutObject'
-      Resource: "arn:aws:s3:::import-service-5/*" 
     - Effect: "Allow"
       Action:
-       - "s3:*"
-      Resource: "arn:aws:s3:::import-service-5/*"
+        - "s3:ListBucket"
+      Resource: "arn:aws:s3:::${self:custom.bucketName}"
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+      Resource: "arn:aws:s3:::${self:custom.bucketName}/*"
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::${self:custom.bucketName}/*"
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource:
+        Fn::GetAtt: [catalogItemsQueue, Arn]
 
-plugins:
-   ["serverless-webpack", "serverless-offline"]
-
-custom:
-  webpack:
-    webpackConfig: 'webpack.config.js'
-    includeModules: true
-
+resources:
+  Resources:
+    catalogItemsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: "catalogItemsQueue"
+  Outputs: 
+    QueueURL: 
+     Description: "URL of new Amazon SQS Queue"
+     Value: 
+       Ref: "catalogItemsQueue"
+    QueueARN: 
+      Description: "ARN of new AmazonSQS Queue"
+      Value: 
+        Fn::GetAtt: 
+          - "catalogItemsQueue"
+          - "Arn"
+    QueueName: 
+      Description: "Name of new Amazon SQS Queue"
+      Value: 
+        Fn::GetAtt: 
+          - "catalogItemsQueue"
+          - "QueueName"
 
 functions:
   importProductsFile:
@@ -43,16 +75,16 @@ functions:
             name: true
           cors:
             origin: "*"
-        
+
   importFileParser:
     handler: importFileParser.importFileParser
     events:
       - s3:
-          bucket: 'import-service-5'
+          bucket: "${self:custom.bucketName}"
           existing: true
           event: s3:ObjectCreated:*
           rules:
             - prefix: uploaded/
             - suffix: .csv
 
-      
+            
