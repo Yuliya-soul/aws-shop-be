@@ -17,6 +17,7 @@ provider:
   runtime: nodejs12.x
   environment:
     THE_QUEUE_URL: { Ref: catalogItemsQueue }
+    BUCKET:  ${self:custom.bucketName}
 
   stage: ${opt:stage, 'dev'}
   region: us-east-1

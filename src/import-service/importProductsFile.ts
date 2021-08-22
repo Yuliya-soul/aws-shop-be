@@ -3,7 +3,7 @@ import * as AWS from "aws-sdk";
 
 export const importProductsFile = async (event) => {
   try {
-    const BUCKET = 'import-service-5';
+    const BUCKET =  process.env.BUCKET;
     const s3 = new AWS.S3({ region: "us-east-1", signatureVersion: "v4" });
     const catalogName = event.queryStringParameters.name;
     const catalogPath = `uploaded/${catalogName}`;

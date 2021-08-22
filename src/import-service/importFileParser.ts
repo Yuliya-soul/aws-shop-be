@@ -2,7 +2,7 @@ import csv from "csv-parser";
 import AWS from "aws-sdk";
 
 export const importFileParser = async (event) => {
-  const BUCKET = "import-service-5";
+  const BUCKET = process.env.BUCKET;
   const s3 = new AWS.S3({ region: "us-east-1" });
   var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 
@@ -47,7 +47,7 @@ export const importFileParser = async (event) => {
         .promise();
 
       console.log(
-        `${decodeURI(keyRecord)} has been moved to the /parsed folder`
+        `${keyRecord} has been moved to the /parsed folder`
       );
     }
   } catch (error) {
