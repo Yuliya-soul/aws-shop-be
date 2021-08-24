@@ -8,7 +8,7 @@ custom:
   webpack:
     webpackConfig: "webpack.config.js"
     includeModules: true
-  bucketName: import-service-5
+  bucketName: import-service-6
 
 plugins: ["serverless-webpack", "serverless-offline"]
 
@@ -18,7 +18,8 @@ provider:
   environment:
     THE_QUEUE_URL: { Ref: catalogItemsQueue }
     BUCKET: ${self:custom.bucketName}
-    SNS: { Ref: "SNSTopic" }
+    SNS_ARN: 
+      Ref: SNSTopic
 
   stage: ${opt:stage, 'dev'}
   region: us-east-1
@@ -45,8 +46,25 @@ provider:
       Action: 
         - sns:*
       Resource: 
-        Ref: "SNSTopic"
+        Ref: SNSTopic
 
+resources:
+  Resources:
+    catalogItemsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: catalogItemsQueue
+    SNSTopic: 
+        Type: AWS::SNS::Topic
+        Properties: 
+          TopicName: createProductTopic
+    SNSSubscription: 
+        Type: AWS::SNS::Subscription
+        Properties: 
+          Endpoint: darki@tut.by
+          Protocol: email
+          TopicArn: 
+            Ref: SNSTopic      
          
 functions:
   importProductsFile:
@@ -82,20 +100,4 @@ functions:
           arn:
             Fn::GetAtt: [catalogItemsQueue, Arn]
        
-resources:
-  Resources:
-    catalogItemsQueue:
-      Type: AWS::SQS::Queue
-      Properties:
-        QueueName: "catalogItemsQueue"
-    SNSTopic: 
-        Type: AWS::SNS::Topic
-        Properties: 
-          TopicName: "createProductTopic"
-    SNSSubscription: 
-        Type: "AWS::SNS::Subscription"
-        Properties: 
-          Endpoint: "darki2015@icloud.com"
-          Protocol: "email"
-          TopicArn: 
-            Ref: "SNSTopic"            
+     
