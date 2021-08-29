@@ -20,6 +20,9 @@ provider:
     BUCKET: ${self:custom.bucketName}
     SNS_ARN: 
       Ref: SNSTopic
+    SNS_ARN_CUSTOM: 
+      Ref: SuperTopic
+ 
 
   stage: ${opt:stage, 'dev'}
   region: us-east-1
@@ -47,6 +50,11 @@ provider:
         - sns:*
       Resource: 
         Ref: SNSTopic
+    - Effect: "Allow"
+      Action: 
+        - sns:*
+      Resource: 
+        Ref: SuperTopic
 
 resources:
   Resources:
@@ -58,6 +66,10 @@ resources:
         Type: AWS::SNS::Topic
         Properties: 
           TopicName: createProductTopic
+    SuperTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+          TopicName: MyCustomTopic      
     SNSSubscription: 
         Type: AWS::SNS::Subscription
         Properties: 
@@ -65,7 +77,14 @@ resources:
           Protocol: email
           TopicArn: 
             Ref: SNSTopic      
-         
+    SNSBooksSubscription: 
+        Type: AWS::SNS::Subscription
+        Properties: 
+          Endpoint: darki2015@icloud.com
+          Protocol: email
+          TopicArn: 
+            Ref: SuperTopic   
+
 functions:
   importProductsFile:
     handler: importProductsFile.importProductsFile
@@ -99,5 +118,18 @@ functions:
           batchSize: 5
           arn:
             Fn::GetAtt: [catalogItemsQueue, Arn]
-       
-     
+      - sns:
+          arn: 
+            Ref: SuperTopic
+          topicName: MyCustomTopic
+          filterPolicy:
+            Title:
+              - newUser
+      - sns:
+          arn: 
+            Ref: SNSTopic
+          topicName: createProductTopic
+          filterPolicy:
+            Title:
+               - admin
+            

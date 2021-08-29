@@ -21,6 +21,12 @@ export const importFileParser = async (event) => {
               {
                 QueueUrl: process.env.THE_QUEUE_URL,
                 MessageBody: JSON.stringify(data),
+                MessageAttributes: {
+                  Title: {
+                    DataType: "String",
+                    StringValue: "admin",
+                  },
+                },
               },
               (err, data) => {
                 if (err) console.log(err, err.stack);
@@ -46,9 +52,7 @@ export const importFileParser = async (event) => {
         })
         .promise();
 
-      console.log(
-        `${keyRecord} has been moved to the /parsed folder`
-      );
+      console.log(`${keyRecord} has been moved to the /parsed folder`);
     }
   } catch (error) {
     console.log(error);
