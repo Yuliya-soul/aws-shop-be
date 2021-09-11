@@ -96,9 +96,16 @@ functions:
             parameters:
               querystrings:
                 name: true
-          
           cors:
             origin: "*"
+          authorizer:
+            name: "basicAuthorizer"
+            arn: "arn:aws:lambda:us-east-1:719832654417:function:authorization-service-new-dev-tokenAuth"
+            managedExternally: false
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            type: "token"
+       
 
   importFileParser:
     handler: importFileParser.importFileParser

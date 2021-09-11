@@ -4,7 +4,7 @@ import AWS from "aws-sdk";
 export const importFileParser = async (event) => {
   const BUCKET = process.env.BUCKET;
   const s3 = new AWS.S3({ region: "us-east-1" });
-  var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
+  const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 
   try {
     for (const record of event.Records) {

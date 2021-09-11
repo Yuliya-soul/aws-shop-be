@@ -12,17 +12,17 @@ export const catalogBatchProcess = async (event, context, callback) => {
     console.log("butch request to catalog took books", books);
 
     // Create publish parameters
-    var params = {
+    const params = {
       Subject: "hi subscriber here new books in your shop",
       Message: `message ${JSON.stringify(books)}`,
       TopicArn: process.env.SNS_ARN,
     };
-    var paramsCustom = {
+    const paramsCustom = {
       Subject: "hi subscriber here new books in your shop",
       Message: `message ${JSON.stringify(books)}`,
       TopicArn: process.env.SNS_ARN_CUSTOM,
     };
-    var results, resultsCustom;
+    let results, resultsCustom;
     if (attr === JSON.stringify("admin")) {
       results = await sns
         .publish(params, (err, data) => {

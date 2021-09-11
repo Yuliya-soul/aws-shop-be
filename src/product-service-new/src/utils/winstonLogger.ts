@@ -1,4 +1,4 @@
-const winston = require('winston');
+import * as winston from "winston";
 
 interface LoggerInterface {
     logRequest: ( message: string ) => void

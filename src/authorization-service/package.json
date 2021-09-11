@@ -1,0 +1,26 @@
+{
+  "scripts": {
+    "test": "sls offline start",
+    "dep": "sls deploy",
+    "package-build": "sls package"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.82",
+    "@types/serverless": "^1.78.34",
+    "aws-lambda": "^1.0.6",
+    "prettier": "^2.3.2",
+    "serverless-dotenv-plugin": "^3.9.0",
+    "serverless-offline": "^8.0.0",
+    "serverless-webpack": "^5.5.1",
+    "ts-loader": "^9.2.5",
+    "ts-node": "^10.2.0",
+    "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "typescript": "^4.3.5",
+    "webpack": "^5.50.0",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "dotenv-webpack": "^7.0.3"
+  }
+}

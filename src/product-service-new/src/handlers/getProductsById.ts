@@ -1,4 +1,4 @@
-"use strict";
+//"use strict";
 import { APIGatewayProxyHandler } from "aws-lambda";
 const { Client } = require("pg");
 import { dbOptions } from "../options";
