@@ -1,4 +1,4 @@
-service: sqs-sns-service
+service: sqs-sns-service-3
 frameworkVersion: "2"
 variablesResolutionMode: 20210219
 useDotenv: true
@@ -8,7 +8,7 @@ custom:
   webpack:
     webpackConfig: "webpack.config.js"
     includeModules: true
-  bucketName: import-service-6
+  bucketName: import-service-7
 
 plugins: ["serverless-webpack", "serverless-offline"]
 
@@ -139,4 +139,3 @@ functions:
           filterPolicy:
             Title:
                - admin
-            
