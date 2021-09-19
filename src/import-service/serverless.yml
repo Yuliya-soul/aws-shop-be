@@ -1,0 +1,141 @@
+service: sqs-sns-service-3
+frameworkVersion: "2"
+variablesResolutionMode: 20210219
+useDotenv: true
+configValidationMode: warn
+
+custom:
+  webpack:
+    webpackConfig: "webpack.config.js"
+    includeModules: true
+  bucketName: import-service-7
+
+plugins: ["serverless-webpack", "serverless-offline"]
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  environment:
+    THE_QUEUE_URL: { Ref: catalogItemsQueue }
+    BUCKET: ${self:custom.bucketName}
+    SNS_ARN: 
+      Ref: SNSTopic
+    SNS_ARN_CUSTOM: 
+      Ref: SuperTopic
+ 
+
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  lambdaHashingVersion: 20201221
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+      Resource: "arn:aws:s3:::${self:custom.bucketName}"
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+      Resource: "arn:aws:s3:::${self:custom.bucketName}/*"
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource: "arn:aws:s3:::${self:custom.bucketName}/*"
+    - Effect: Allow
+      Action:
+        - sqs:*
+      Resource:
+        Fn::GetAtt: [catalogItemsQueue, Arn]
+    - Effect: "Allow"
+      Action: 
+        - sns:*
+      Resource: 
+        Ref: SNSTopic
+    - Effect: "Allow"
+      Action: 
+        - sns:*
+      Resource: 
+        Ref: SuperTopic
+
+resources:
+  Resources:
+    catalogItemsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: catalogItemsQueue
+    SNSTopic: 
+        Type: AWS::SNS::Topic
+        Properties: 
+          TopicName: createProductTopic
+    SuperTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+          TopicName: MyCustomTopic      
+    SNSSubscription: 
+        Type: AWS::SNS::Subscription
+        Properties: 
+          Endpoint: darki@tut.by
+          Protocol: email
+          TopicArn: 
+            Ref: SNSTopic      
+    SNSBooksSubscription: 
+        Type: AWS::SNS::Subscription
+        Properties: 
+          Endpoint: darki2015@icloud.com
+          Protocol: email
+          TopicArn: 
+            Ref: SuperTopic   
+
+functions:
+  importProductsFile:
+    handler: importProductsFile.importProductsFile
+    events:
+      - http:
+          method: get
+          path: import
+          request:
+            parameters:
+              querystrings:
+                name: true
+          cors:
+            origin: "*"
+          authorizer:
+            name: "basicAuthorizer"
+            arn: "arn:aws:lambda:us-east-1:719832654417:function:authorization-service-new-dev-tokenAuth"
+            managedExternally: false
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            type: "token"
+       
+
+  importFileParser:
+    handler: importFileParser.importFileParser
+    events:
+      - s3:
+          bucket: "${self:custom.bucketName}"
+          existing: true
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploaded/
+            - suffix: .csv
+
+  catalogBatchProcess: 
+    handler: catalogBatchProcess.catalogBatchProcess
+    events: 
+      - sqs: 
+          batchSize: 5
+          arn:
+            Fn::GetAtt: [catalogItemsQueue, Arn]
+      - sns:
+          arn: 
+            Ref: SuperTopic
+          topicName: MyCustomTopic
+          filterPolicy:
+            Title:
+              - newUser
+      - sns:
+          arn: 
+            Ref: SNSTopic
+          topicName: createProductTopic
+          filterPolicy:
+            Title:
+               - admin

@@ -1,0 +1,25 @@
+service: authorization-service-new
+frameworkVersion: "2"
+variablesResolutionMode: 20210219
+useDotenv: true
+configValidationMode: warn
+
+custom:
+  webpack:
+    webpackConfig: "webpack.config.js"
+    includeModules: true
+
+plugins: ["serverless-webpack", "serverless-offline","serverless-dotenv-plugin"]
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  lambdaHashingVersion: 20201221
+
+
+functions:
+  tokenAuth: 
+    handler: src/handlers/tokenAuthorizer.handler
+  
+         
