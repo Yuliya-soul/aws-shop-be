@@ -6,7 +6,8 @@
   "scripts": {
     "test": "sls offline start",
     "dep": "sls deploy",
-    "package-build": "sls package"
+    "package-build": "sls package",
+    "start":"node index.js"
   },
   "engines": {
     "node": ">=14.15.0"
