@@ -41,7 +41,7 @@ app.all("/*", (req, res) => {
         }
       });
   } else {
-    res.status(502).json({ error: "bad request" });
+    res.status(502).json({ error: "Cannot process request" });
   }
 });
 app.listen(PORT, () =>

@@ -7,9 +7,10 @@
     "test": "sls offline start",
     "dep": "sls deploy",
     "package-build": "sls package",
-    "start":"node index.js",
-    "app-dev":"nodemon index.js",
-    "start-modifier":"node index-response-modifier.js"
+    "start": "node index.js",
+    "app-dev": "nodemon index.js",
+    "start-modifier": "node index-response-modifier.js",
+    "build": "webpack"
   },
   "engines": {
     "node": ">=14.15.0"
