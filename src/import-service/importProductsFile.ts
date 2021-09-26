@@ -18,6 +18,7 @@ const handler = async (event) => {
       Bucket: BUCKET,
       Key: catalogPath,
       ACL: "public-read",
+      ContentType:"text/csv"
     };
 
     const url = await s3.getSignedUrlPromise("putObject", params);
