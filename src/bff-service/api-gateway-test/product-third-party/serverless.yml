@@ -1,0 +1,27 @@
+service: third-party
+frameworkVersion: "2"
+variablesResolutionMode: 20210219
+useDotenv: true
+configValidationMode: warn
+
+
+
+plugins: [ "serverless-offline"]
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  
+  region: us-east-1
+  lambdaHashingVersion: 20201221
+  
+
+functions:
+  product:
+    handler: handler.product
+    events:
+      - http:
+          method: get
+          path: product-third-party
+          cors: true
+           
